@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +15,8 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private PlayerInputActions inputActions;
     private Vector2 playerPosition;
+    public GameObject canva;
+    private bool isSelect = false;
 
     private void Awake()
     {
@@ -27,7 +30,16 @@ public class PlayerController : MonoBehaviour
 
     private void onMenuInput(InputAction.CallbackContext obj)
     {
-        Debug.Log("Open Menu");
+        if (isSelect)
+        {
+            canva.SetActive(false);
+            isSelect = false;
+        }
+        else
+        {
+            canva.SetActive(true);
+            isSelect = true;
+        }
     }
 
     public void SavePlayer()
