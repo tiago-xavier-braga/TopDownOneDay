@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
@@ -11,6 +13,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
     private Animator animator;
     private PlayerInputActions inputActions;
+    private Vector2 playerPosition;
 
     private void Awake()
     {
@@ -18,6 +21,28 @@ public class PlayerController : MonoBehaviour
         animator = GetComponent<Animator>();
         inputActions = new PlayerInputActions();
         inputActions.PlayerControls.Enable();
+        playerPosition = this.transform.position;
+        inputActions.PlayerControls.Menu.performed += onMenuInput;
+    }
+
+    private void onMenuInput(InputAction.CallbackContext obj)
+    {
+        Debug.Log("Open Menu");
+    }
+
+    public void SavePlayer()
+    {
+        SaveSystem.SavePlayer(playerPosition);
+    }
+    public void LoadPlayer()
+    {
+        PlayerData data = SaveSystem.LoadPlayer();
+        Vector2 position;
+        position.x = data.playerPosition[0];
+        position.y = data.playerPosition[1];
+
+        transform.position = position;
+
     }
 
     void Update()
@@ -54,5 +79,6 @@ public class PlayerController : MonoBehaviour
         }
 
         rb.velocity = moveInput * speed * Time.deltaTime;
+        playerPosition = this.transform.position;
     }
 }
